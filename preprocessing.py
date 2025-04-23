@@ -64,6 +64,7 @@ vectorizer_model = tf.keras.Model(inputs=input_layer, outputs=output_layer)
 vectorizer_model.save("text_vectorizer_model")
 print("TensorFlow datasets are ready!")
 
+
 # Load the vectorizer model
 # loaded_vectorizer_model = tf.keras.models.load_model("text_vectorizer_model")
 # Extract the actual TextVectorization layer
