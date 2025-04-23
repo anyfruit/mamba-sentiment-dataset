@@ -13,10 +13,11 @@ def build_lstm_model(vocab_size,
 
     for i in range(num_layers):
         return_seq = True if i < num_layers - 1 else False
-        x = layers.LSTM(units=lstm_units, return_sequences=return_seq)(x)
+        x = layers.LSTM(units=lstm_units, return_sequences=return_seq)(x) # True: [batch_size, max_len, lstm_units]; False: [batch_size, lstm_units]
         if dropout_rate:
             x = layers.Dropout(dropout_rate)(x)
 
+    # Feedforward
     x = layers.Dense(128, activation='relu')(x)
     outputs = layers.Dense(num_classes, activation='sigmoid' if num_classes == 1 else 'softmax')(x)
 
