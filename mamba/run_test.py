@@ -6,6 +6,8 @@ import tensorflow as tf
 from config import Config
 from model import build_model
 from inference import predict
+from transformers import AutoTokenizer
+
 
 # Dummy tokenizer for testing
 class DummyTokenizer:
@@ -30,7 +32,10 @@ args = Config(
 )
 
 # Instantiate dummy tokenizer
-tokenizer = DummyTokenizer(vocab_size=args.vocab_dim, seq_len=args.max_seq_len)
+# tokenizer = DummyTokenizer(vocab_size=args.vocab_dim, seq_len=args.max_seq_len)
+
+# Instantiate tokenizer
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 
 # Build model
 model, _ = build_model(args)
@@ -51,6 +56,7 @@ BATCH_SIZE = 8
 
 train_df = pd.read_csv("data/train_tokenized.csv")
 test_df = pd.read_csv("data/test_tokenized.csv")
+val_df = pd.read_csv("data/val_tokenized.csv")
 
 # Separate inputs and labels
 train_inputs = train_df.drop(columns=["label"]).values
@@ -58,6 +64,9 @@ train_labels = train_df["label"].values
 
 test_inputs = test_df.drop(columns=["label"]).values
 test_labels = test_df["label"].values
+
+val_inputs = val_df.drop(columns=["label"]).values
+val_labels = val_df["label"].values
 
 BATCH_SIZE = 64
 
@@ -67,14 +76,28 @@ train_dataset = tf.data.Dataset.from_tensor_slices((train_inputs, train_labels))
                                .batch(BATCH_SIZE) \
                                .prefetch(tf.data.AUTOTUNE)
 
-val_dataset = tf.data.Dataset.from_tensor_slices((test_inputs, test_labels)) \
+test_dataset = tf.data.Dataset.from_tensor_slices((test_inputs, test_labels)) \
                              .batch(BATCH_SIZE) \
                              .prefetch(tf.data.AUTOTUNE)
+
+val_dataset = tf.data.Dataset.from_tensor_slices((val_inputs, val_labels)) \
+                             .batch(BATCH_SIZE) \
+                             .prefetch(tf.data.AUTOTUNE)
+
 
 # Train for one epoch
 history = model.fit(train_dataset, validation_data=val_dataset, epochs=1)
 
+
+# Evaluate on test set
+loss, acc = model.evaluate(test_dataset)
+print(f"\nTest Loss: {loss:.4f}, Test Accuracy: {acc:.4f}")
+
 # Inference using dummy data
-fake_text = "This is a test input for Mamba"
-output = predict(fake_text, model, tokenizer, args)
-print("Prediction score:", output.numpy())
+sample_text = "This is a test input for Mamba"
+pred_output = predict(sample_text, model, tokenizer, args)
+pred_class = tf.argmax(pred_output, axis=-1).numpy().item()
+
+# Interpret prediction
+sentiment_map = {0: "Negative", 1: "Neutral", 2: "Positive"}
+print(f"Predicted Sentiment: {pred_class} ({sentiment_map[pred_class]})")
