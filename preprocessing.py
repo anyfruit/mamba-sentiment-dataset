@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from transformers import AutoTokenizer
+from sklearn.model_selection import train_test_split
 
 # Load the dataset
 df = pd.read_csv("data/sentiment.csv", encoding="latin-1", header=None)
@@ -33,13 +34,15 @@ tokenized = tokenizer(
     return_tensors="np"
 )
 
-# Save token ids and labels
+# Combine into DataFrame
 token_ids_df = pd.DataFrame(tokenized["input_ids"])
 token_ids_df["label"] = df["label"].values
 
-# Split and save
-train_df = token_ids_df.sample(frac=0.9, random_state=42)
-test_df = token_ids_df.drop(train_df.index)
+# Split into 98% train, 1% val, 1% test
+train_df, temp_df = train_test_split(token_ids_df, test_size=0.02, stratify=token_ids_df["label"], random_state=42)
+val_df, test_df = train_test_split(temp_df, test_size=0.5, stratify=temp_df["label"], random_state=42)
 
-train_df.to_csv("train_tokenized.csv", index=False)
-test_df.to_csv("test_tokenized.csv", index=False)
+# Save
+train_df.to_csv("data/train_tokenized.csv", index=False)
+val_df.to_csv("data/val_tokenized.csv", index=False)
+test_df.to_csv("data/test_tokenized.csv", index=False)
