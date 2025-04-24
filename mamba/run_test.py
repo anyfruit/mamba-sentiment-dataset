@@ -49,8 +49,8 @@ BATCH_SIZE = 8
 # val_dataset = tf.data.Dataset.from_tensor_slices((random_inputs, random_labels)).batch(BATCH_SIZE)
 
 
-train_df = pd.read_csv("train_tokenized.csv")
-test_df = pd.read_csv("test_tokenized.csv")
+train_df = pd.read_csv("data/train_tokenized.csv")
+test_df = pd.read_csv("data/test_tokenized.csv")
 
 # Separate inputs and labels
 train_inputs = train_df.drop(columns=["label"]).values
