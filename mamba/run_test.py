@@ -1,5 +1,6 @@
 # This file is only for simple testing for the Mamba model with synthetic data
 
+import pandas as pd
 import numpy as np
 import tensorflow as tf
 from config import Config
@@ -26,6 +27,9 @@ args = Config(
     output_dim=1,
     max_seq_len=64,
     loss_fn='binary_crossentropy',
+    output_dim=3,
+    max_seq_len=64,
+    loss_fn='sparse_categorical_crossentropy',
 )
 
 # Instantiate dummy tokenizer
@@ -46,6 +50,36 @@ random_labels = np.random.randint(0, 2, size=(NUM_SAMPLES,))
 # Create TensorFlow datasets
 train_dataset = tf.data.Dataset.from_tensor_slices((random_inputs, random_labels)).shuffle(100).batch(BATCH_SIZE)
 val_dataset = tf.data.Dataset.from_tensor_slices((random_inputs, random_labels)).batch(BATCH_SIZE)
+# # Random integer token IDs and labels
+# random_inputs = np.random.randint(0, args.vocab_dim, size=(NUM_SAMPLES, args.max_seq_len))
+# random_labels = np.random.randint(0, 2, size=(NUM_SAMPLES,))
+
+# # Create TensorFlow datasets
+# train_dataset = tf.data.Dataset.from_tensor_slices((random_inputs, random_labels)).shuffle(100).batch(BATCH_SIZE)
+# val_dataset = tf.data.Dataset.from_tensor_slices((random_inputs, random_labels)).batch(BATCH_SIZE)
+
+
+train_df = pd.read_csv("data/train_tokenized.csv")
+test_df = pd.read_csv("data/test_tokenized.csv")
+
+# Separate inputs and labels
+train_inputs = train_df.drop(columns=["label"]).values
+train_labels = train_df["label"].values
+
+test_inputs = test_df.drop(columns=["label"]).values
+test_labels = test_df["label"].values
+
+BATCH_SIZE = 64
+
+# Create TensorFlow datasets
+train_dataset = tf.data.Dataset.from_tensor_slices((train_inputs, train_labels)) \
+                               .shuffle(buffer_size=len(train_inputs)) \
+                               .batch(BATCH_SIZE) \
+                               .prefetch(tf.data.AUTOTUNE)
+
+val_dataset = tf.data.Dataset.from_tensor_slices((test_inputs, test_labels)) \
+                             .batch(BATCH_SIZE) \
+                             .prefetch(tf.data.AUTOTUNE)
 
 # Train for one epoch
 history = model.fit(train_dataset, validation_data=val_dataset, epochs=1)
