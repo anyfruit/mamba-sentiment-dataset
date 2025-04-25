@@ -32,7 +32,6 @@ args = Config(
     max_seq_len=64,
     loss_fn='binary_crossentropy',
     output_dim=3,
-    max_seq_len=64,
     loss_fn='sparse_categorical_crossentropy',
 )
 
