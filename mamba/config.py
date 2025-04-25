@@ -2,6 +2,7 @@ import math
 import numpy as np
 from dataclasses import dataclass
 from tensorflow import keras
+import tensorflow as tf
 from typing import Union
 
 @dataclass
@@ -32,7 +33,9 @@ class Config:
 
     final_act = None # Final layer activation 
     loss_fn: Union[str, keras.losses.Loss]=None # Loss function
-    opt: Union[str, keras.optimizers.Optimizer] = keras.optimizers.legacy.Adam() # Optimizer
+    #opt: Union[str, keras.optimizers.Optimizer] = keras.optimizers.legacy.Adam() # Optimizer
+    opt: Union[str, tf.keras.optimizers.Optimizer] = tf.keras.optimizers.Adam()
+
     eval_metrics = ['accuracy'] # Evaluation metrics
 
     def __post_init__(self):
