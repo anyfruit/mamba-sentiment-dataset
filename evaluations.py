@@ -12,7 +12,6 @@ colors = {
     "LSTM": "red"
 }
 
-# Load Data 
 runtime_data = []
 summary_data = []
 
