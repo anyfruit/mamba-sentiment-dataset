@@ -1,6 +1,6 @@
 {
   "model": "LSTM",
-  "accuracy": 0.4875,
-  "avg_inference_time": 0.06702,
-  "total_samples": 160
+  "accuracy": 0.4998,
+  "avg_inference_time": 0.06191,
+  "total_samples": 15961
 }

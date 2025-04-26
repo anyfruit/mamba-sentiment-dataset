@@ -30,7 +30,8 @@ args = Config(
     vocab_dim=30522,  
 #    output_dim=1,
     max_seq_len=64,
-#    loss_fn='binary_crossentropy',
+#
+#     loss_fn='binary_crossentropy',
     output_dim=3,
     loss_fn='sparse_categorical_crossentropy',
 )
