@@ -103,7 +103,7 @@ summary_path = "results/transformer_summary.json"
 
 with open(inference_log_path, mode="w", newline="") as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(["tweet_id", "seq_len", "runtime_s"])
+    writer.writerow(["tweet_id", "seq_len", "runtime_s","true_label", "predicted_label"])
 
     correct = 0
     total = 0
@@ -123,7 +123,7 @@ with open(inference_log_path, mode="w", newline="") as csvfile:
         if pred_class == y_true:
             correct += 1
         total += 1
-        writer.writerow([i + 1, seq_len, round(runtime, 5)])
+        writer.writerow([i + 1, seq_len, round(runtime, 5),int(y_true), int(pred_class)])
 
 # Save summary
 summary = {
