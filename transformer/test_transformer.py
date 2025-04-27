@@ -77,7 +77,7 @@ test_ds = tf.data.Dataset.from_tensor_slices((test_inputs, test_labels)).batch(B
 
 
 # Train
-model.fit(train_ds, validation_data=val_ds, epochs=1)
+model.fit(train_ds, validation_data=val_ds, epochs=10)
 
 # Evaluate
 loss, acc = model.evaluate(test_ds)

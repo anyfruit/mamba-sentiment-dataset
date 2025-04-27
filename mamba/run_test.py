@@ -114,7 +114,7 @@ val_dataset = tf.data.Dataset.from_tensor_slices((val_inputs, val_labels)) \
 
 
 # Train for one epoch
-history = model.fit(train_dataset, validation_data=val_dataset, epochs=1)
+history = model.fit(train_dataset, validation_data=val_dataset, epochs=10)
 
 
 # Evaluate on test set
