@@ -12,7 +12,12 @@ class SimpleSSMLayer(layers.Layer):
     def call(self, inputs):
         # inputs: [batch, length, dim]
         delta = tf.ones_like(inputs)
-        A_bar = tf.exp(tf.cumsum(tf.einsum('bld,dn->bldn', delta, self.A), axis=1))
+        cumsum = tf.cumsum(tf.einsum('bld,dn->bldn', delta, self.A), axis=1)
+        cumsum_clipped = tf.clip_by_value(cumsum, clip_value_min=-10.0, clip_value_max=10.0)
+        A_bar = tf.exp(cumsum_clipped)
+
+        #A_bar = tf.exp(tf.cumsum(tf.einsum('bld,dn->bldn', delta, self.A), axis=1))
+        
         B_expanded = tf.expand_dims(self.B, axis=0) # shape: [1, dim, state_dim]
         B_tiled = tf.tile(B_expanded, [tf.shape(inputs)[0], 1, 1])  # shape: [batch, dim, state_dim]
         B_tiled = tf.expand_dims(B_tiled, axis=1) # shape: [batch, 1, dim, state_dim]
