@@ -4,10 +4,10 @@ from tensorflow.keras import layers, Model
 class SimpleSSMLayer(layers.Layer):
     def __init__(self, state_dim, input_dim):
         super().__init__()
-        self.A = self.add_weight("A", shape=(input_dim, state_dim), initializer="random_normal")
-        self.B = self.add_weight("B", shape=(input_dim, state_dim), initializer="random_normal")
-        self.C = self.add_weight("C", shape=(input_dim, state_dim), initializer="random_normal")
-        self.D = self.add_weight("D", shape=(input_dim,), initializer="ones")
+        self.A = self.add_weight(name="A", shape=(input_dim, state_dim), initializer="random_normal")
+        self.B = self.add_weight(name="B", shape=(input_dim, state_dim), initializer="random_normal")
+        self.C = self.add_weight(name="C", shape=(input_dim, state_dim), initializer="random_normal")
+        self.D = self.add_weight(name="D", shape=(input_dim,), initializer="ones")
 
     def call(self, inputs):
         # inputs: [batch, length, dim]
