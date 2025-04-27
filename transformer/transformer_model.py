@@ -15,7 +15,7 @@ class TransformerBlock(layers.Layer):
         self.dropout1 = layers.Dropout(dropout_rate)
         self.dropout2 = layers.Dropout(dropout_rate)
 
-    def call(self, inputs, training):
+    def call(self, inputs, training=None):
         attn_output = self.att(inputs, inputs) # [batch, seq_len, embed_dim]
         attn_output = self.dropout1(attn_output, training=training)
         out1 = self.layernorm1(inputs + attn_output) # Residual connection
