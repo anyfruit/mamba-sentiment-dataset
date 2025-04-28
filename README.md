@@ -1,21 +1,57 @@
-Mamba: Linear-Time Sequence Modeling for Sentiment Analysis
+# Mamba Sentiment Classification
 
-This project reimplements the Mamba model with TensorFlow and evaluates its performance on sentiment classification using the Sentiment140 dataset.
+**Authors**: Xiaoke Song, Ruoyun Yang, Kejing Yan  
+**Course**: DSI 1470, Brown University
 
-Overview
+---
 
-We're testing Mamba's capabilities on a dataset of 1.6 million tweets labeled for sentiment, a task requiring contextual understanding and nuance detection. Our goal is comparing Mamba directly against Transformer models to assess its efficiency-effectiveness claims.
+## Overview
 
-Mamba offers several key advantages:
+This project re-implements the **Mamba** model (Gu et al., 2024) — a linear-time sequence model with selective state spaces — in **TensorFlow**, and evaluates its performance on a natural language sentiment classification task. We benchmark Mamba against **Transformer**, **LSTM**, and **structured state-space (SSM)** models using the **Sentiment140** dataset.
 
-Linear-time processing versus the quadratic scaling of Transformer attention
-Hardware-aware algorithm using recurrent scanning without materializing expanded states
-Input-dependent selection mechanism that improves performance on discrete, information-dense data like text
+Our goal is to assess Mamba’s modeling capability on textual data while comparing its **accuracy** and **inference speed** to established baselines.
 
-Research Goals
+---
 
-Evaluate Mamba's sentiment analysis performance
-Compare accuracy and speed against Transformer models
-Analyze practical trade-offs for efficient NLP deployment
+## Key Features
+- **TensorFlow Reimplementation** of Mamba architecture
+- **Synthetic scan operations** using `tf.einsum`, `tf.cumsum`, and custom tensor reshaping
+- **Unified evaluation** across Mamba, Transformer, LSTM, and SSM models
+- **Standardized hyperparameters** for fair comparison
+- **Benchmarking** on classification accuracy and inference runtime
 
-This project aims to provide insights into whether Mamba can match Transformer performance while delivering the computational efficiency promised in the original paper.
+---
+
+## Dataset
+- **Sentiment140 Dataset** ([Kaggle Link](https://www.kaggle.com/datasets/kazanova/sentiment140))  
+- 1.6 million tweets labeled as positive, negative, or neutral
+
+---
+
+## Model Setup
+| Model        | Depth | Main Layers                  | Hidden Units     | Dropout |
+|--------------|-------|-------------------------------|------------------|---------|
+| Mamba        | 2     | HighwayBlock (Selective SSM)  | 64 internal       | 0.2     |
+| Transformer  | 2     | MHA + Feedforward             | 64 embed, 128 FF  | 0.1     |
+| LSTM         | 2     | LSTM                          | 128 units         | 0.2     |
+| SSM          | 2     | SimpleSSMLayer                | 64                | 0.1     |
+
+> **Note**: Mamba uses deeper layers for better representation learning, and LSTM is assigned a higher dropout rate to mitigate overfitting.
+
+---
+
+## Model Repository Structure
+- `config.py`: Model hyperparameter configurations
+- `ssm.py`: Dynamic selective scan operations
+- `mamba_block.py`: Core selective block design
+- `residual_block.py`: Residual wrapper around selective blocks
+- `model.py`: Full Mamba model construction
+- `inference.py`: Simple inference function
+- `run_test.py`: Script for model training and evaluation with synthetic/random data
+- `README.md`: Project overview
+
+---
+
+## Quick Start
+```bash
+python run_test.py
