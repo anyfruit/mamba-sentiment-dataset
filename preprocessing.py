@@ -11,7 +11,7 @@ label_map = {0: 0, 2: 1, 4: 2}
 df["label"] = df["target"].map(label_map)
 
 
-# Clean
+# Clean data
 import pandas as pd
 import re
 from transformers import AutoTokenizer
