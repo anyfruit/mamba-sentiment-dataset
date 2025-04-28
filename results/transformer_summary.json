@@ -1,6 +1,6 @@
 {
   "model": "Transformer",
   "accuracy": 0.8186,
-  "avg_inference_time": 0.03769,
+  "avg_inference_time": 0.00767,
   "total_samples": 15961
 }

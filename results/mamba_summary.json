@@ -1,6 +1,6 @@
 {
   "model": "Mamba",
   "accuracy": 0.8232,
-  "avg_inference_time": 0.06879,
+  "avg_inference_time": 0.02704,
   "total_samples": 15961
 }
