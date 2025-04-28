@@ -1,6 +1,6 @@
 {
   "model": "SSM",
-  "accuracy": 0.8161,
-  "avg_inference_time": 0.0068,
+  "accuracy": 0.8176,
+  "avg_inference_time": 0.01683,
   "total_samples": 15961
 }
